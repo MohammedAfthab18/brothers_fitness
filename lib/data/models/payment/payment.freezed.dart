@@ -227,8 +227,8 @@ return $default(_that.id,_that.memberId,_that.memberName,_that.planId,_that.plan
 }
 
 /// @nodoc
+@JsonSerializable()
 
-@JsonSerializable(explicitToJson: true)
 class _Payment extends Payment {
   const _Payment({required this.id, required this.memberId, required this.memberName, required this.planId, required this.planName, required this.amount, required this.paymentMethod, @TimestampConverter() required this.paidAt, @TimestampConverter() required this.expiryDate, @TimestampConverter() required this.createdAt, @TimestampConverter() required this.updatedAt, @NullableTimestampConverter() this.lastSyncedAt, this.isSynced = false}): super._();
   factory _Payment.fromJson(Map<String, dynamic> json) => _$PaymentFromJson(json);

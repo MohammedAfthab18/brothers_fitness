@@ -14,8 +14,7 @@ part 'member.g.dart';
 /// - Includes cached attendanceCount for dashboards.
 /// - Includes optional inline notes blocks (kept small and capped in UI).
 @freezed
-class Member with _$Member {
-  @JsonSerializable(explicitToJson: true)
+abstract class Member with _$Member {
   const factory Member({
     /// Firestore document id (client-generated).
     required String id,
@@ -82,8 +81,7 @@ class Member with _$Member {
 
 /// Individual note block embedded in [Member].
 @freezed
-class MemberNoteBlock with _$MemberNoteBlock {
-  @JsonSerializable(explicitToJson: true)
+abstract class MemberNoteBlock with _$MemberNoteBlock {
   const factory MemberNoteBlock({
     required String id,
     required String type, // text | checklist | tag | heading
@@ -115,5 +113,3 @@ extension MemberFirestoreX on Member {
     return json;
   }
 }
-
-

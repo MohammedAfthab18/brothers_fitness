@@ -227,8 +227,8 @@ return $default(_that.id,_that.memberId,_that.memberName,_that.whatsappNumber,_t
 }
 
 /// @nodoc
+@JsonSerializable()
 
-@JsonSerializable(explicitToJson: true)
 class _Reminder extends Reminder {
   const _Reminder({required this.id, required this.memberId, required this.memberName, required this.whatsappNumber, required this.planName, @TimestampConverter() required this.expiryDate, required this.reminderType, required this.channel, this.isSent = false, @TimestampConverter() required this.createdAt, @TimestampConverter() required this.updatedAt, @NullableTimestampConverter() this.lastSyncedAt, this.isSynced = false}): super._();
   factory _Reminder.fromJson(Map<String, dynamic> json) => _$ReminderFromJson(json);

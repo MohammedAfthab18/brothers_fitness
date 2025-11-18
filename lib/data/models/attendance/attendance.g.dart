@@ -9,28 +9,22 @@ part of 'attendance.dart';
 _Attendance _$AttendanceFromJson(Map<String, dynamic> json) => _Attendance(
   id: json['id'] as String,
   memberId: json['memberId'] as String,
-  memberName: json['memberName'] as String,
-  date: json['date'] as String,
+  date: const TimestampConverter().fromJson(json['date']),
   checkInTime: const TimestampConverter().fromJson(json['checkInTime']),
-  createdAt: const TimestampConverter().fromJson(json['createdAt']),
-  updatedAt: const TimestampConverter().fromJson(json['updatedAt']),
-  lastSyncedAt: const NullableTimestampConverter().fromJson(
-    json['lastSyncedAt'],
+  checkOutTime: const NullableTimestampConverter().fromJson(
+    json['checkOutTime'],
   ),
-  isSynced: json['isSynced'] as bool? ?? false,
+  createdAt: const TimestampConverter().fromJson(json['createdAt']),
 );
 
 Map<String, dynamic> _$AttendanceToJson(_Attendance instance) =>
     <String, dynamic>{
       'id': instance.id,
       'memberId': instance.memberId,
-      'memberName': instance.memberName,
-      'date': instance.date,
+      'date': const TimestampConverter().toJson(instance.date),
       'checkInTime': const TimestampConverter().toJson(instance.checkInTime),
-      'createdAt': const TimestampConverter().toJson(instance.createdAt),
-      'updatedAt': const TimestampConverter().toJson(instance.updatedAt),
-      'lastSyncedAt': const NullableTimestampConverter().toJson(
-        instance.lastSyncedAt,
+      'checkOutTime': const NullableTimestampConverter().toJson(
+        instance.checkOutTime,
       ),
-      'isSynced': instance.isSynced,
+      'createdAt': const TimestampConverter().toJson(instance.createdAt),
     };

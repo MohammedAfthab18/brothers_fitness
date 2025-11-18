@@ -11,8 +11,7 @@ part 'plan.g.dart';
 /// Kept small and stable; frequently used fields are duplicated on [Member]
 /// and [Payment] documents to avoid extra reads.
 @freezed
-class Plan with _$Plan {
-  @JsonSerializable(explicitToJson: true)
+abstract class Plan with _$Plan {
   const factory Plan({
     /// Firestore document id (client-generated or stable key).
     required String id,
@@ -47,5 +46,3 @@ extension PlanFirestoreX on Plan {
     return json;
   }
 }
-
-

@@ -11,8 +11,7 @@ part 'app_user.g.dart';
 /// Avatars are stored inline as compressed base64 strings to avoid
 /// Firebase Storage and extra reads.
 @freezed
-class AppUser with _$AppUser {
-  @JsonSerializable(explicitToJson: true)
+abstract class AppUser with _$AppUser {
   const factory AppUser({
     /// Firestore document id (client-generated or same as auth uid).
     required String id,
@@ -56,5 +55,3 @@ extension AppUserFirestoreX on AppUser {
     return json;
   }
 }
-
-

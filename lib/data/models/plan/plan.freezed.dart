@@ -215,8 +215,8 @@ return $default(_that.id,_that.title,_that.durationDays,_that.price,_that.isActi
 }
 
 /// @nodoc
+@JsonSerializable()
 
-@JsonSerializable(explicitToJson: true)
 class _Plan extends Plan {
   const _Plan({required this.id, required this.title, required this.durationDays, required this.price, this.isActive = true, @TimestampConverter() required this.createdAt, @TimestampConverter() required this.updatedAt, @NullableTimestampConverter() this.lastSyncedAt, this.isSynced = false}): super._();
   factory _Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);

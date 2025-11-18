@@ -11,8 +11,7 @@ part 'reminder.g.dart';
 /// Denormalized fields allow sending messages without additional reads:
 /// memberName, whatsappNumber, planName, expiryDate.
 @freezed
-class Reminder with _$Reminder {
-  @JsonSerializable(explicitToJson: true)
+abstract class Reminder with _$Reminder {
   const factory Reminder({
     /// Firestore document id (client-generated).
     required String id,
@@ -68,5 +67,3 @@ extension ReminderFirestoreX on Reminder {
     return json;
   }
 }
-
-

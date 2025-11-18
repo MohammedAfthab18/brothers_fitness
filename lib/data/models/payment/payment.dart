@@ -11,8 +11,7 @@ part 'payment.g.dart';
 /// Denormalized fields (memberName, planName, expiryDate) allow building
 /// statements and reports with a single collection read.
 @freezed
-class Payment with _$Payment {
-  @JsonSerializable(explicitToJson: true)
+abstract class Payment with _$Payment {
   const factory Payment({
     /// Firestore document id (client-generated).
     required String id,
@@ -68,5 +67,3 @@ extension PaymentFirestoreX on Payment {
     return json;
   }
 }
-
-

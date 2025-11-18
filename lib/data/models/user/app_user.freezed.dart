@@ -219,8 +219,8 @@ return $default(_that.id,_that.displayName,_that.email,_that.role,_that.permissi
 }
 
 /// @nodoc
+@JsonSerializable()
 
-@JsonSerializable(explicitToJson: true)
 class _AppUser extends AppUser {
   const _AppUser({required this.id, required this.displayName, required this.email, required this.role, final  List<String> permissions = const <String>[], this.photoBase64, @TimestampConverter() required this.createdAt, @TimestampConverter() required this.updatedAt, @NullableTimestampConverter() this.lastSyncedAt, this.isSynced = false}): _permissions = permissions,super._();
   factory _AppUser.fromJson(Map<String, dynamic> json) => _$AppUserFromJson(json);

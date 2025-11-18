@@ -243,8 +243,8 @@ return $default(_that.id,_that.fullName,_that.phone,_that.whatsappNumber,_that.s
 }
 
 /// @nodoc
+@JsonSerializable()
 
-@JsonSerializable(explicitToJson: true)
 class _Member extends Member {
   const _Member({required this.id, required this.fullName, required this.phone, required this.whatsappNumber, required this.status, required this.planId, required this.planName, required this.planPrice, required this.planDurationDays, required this.lastPaidAmount, @TimestampConverter() required this.lastPaidDate, @TimestampConverter() required this.expiryDate, this.attendanceCount = 0, this.photoBase64, final  List<MemberNoteBlock> notes = const <MemberNoteBlock>[], @TimestampConverter() required this.createdAt, @TimestampConverter() required this.updatedAt, @NullableTimestampConverter() this.lastSyncedAt, this.isSynced = false}): _notes = notes,super._();
   factory _Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);
@@ -573,8 +573,8 @@ return $default(_that.id,_that.type,_that.content,_that.createdAt,_that.updatedA
 }
 
 /// @nodoc
+@JsonSerializable()
 
-@JsonSerializable(explicitToJson: true)
 class _MemberNoteBlock implements MemberNoteBlock {
   const _MemberNoteBlock({required this.id, required this.type, required this.content, @TimestampConverter() required this.createdAt, @NullableTimestampConverter() this.updatedAt});
   factory _MemberNoteBlock.fromJson(Map<String, dynamic> json) => _$MemberNoteBlockFromJson(json);

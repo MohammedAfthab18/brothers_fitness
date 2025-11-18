@@ -15,12 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Attendance {
 
-/// Firestore document id: `memberId_yyyymmdd`.
- String get id;/// Member reference.
- String get memberId;/// Denormalized member name for quick reporting.
- String get memberName;/// Logical attendance date (local YYYY-MM-DD).
- String get date;/// Exact check-in timestamp.
-@TimestampConverter() DateTime get checkInTime;@TimestampConverter() DateTime get createdAt;@TimestampConverter() DateTime get updatedAt;@NullableTimestampConverter() DateTime? get lastSyncedAt; bool get isSynced;
+ String get id; String get memberId;@TimestampConverter() DateTime get date;@TimestampConverter() DateTime get checkInTime;@NullableTimestampConverter() DateTime? get checkOutTime;@TimestampConverter() DateTime get createdAt;
 /// Create a copy of Attendance
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -33,16 +28,16 @@ $AttendanceCopyWith<Attendance> get copyWith => _$AttendanceCopyWithImpl<Attenda
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Attendance&&(identical(other.id, id) || other.id == id)&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.date, date) || other.date == date)&&(identical(other.checkInTime, checkInTime) || other.checkInTime == checkInTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Attendance&&(identical(other.id, id) || other.id == id)&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.date, date) || other.date == date)&&(identical(other.checkInTime, checkInTime) || other.checkInTime == checkInTime)&&(identical(other.checkOutTime, checkOutTime) || other.checkOutTime == checkOutTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,memberId,memberName,date,checkInTime,createdAt,updatedAt,lastSyncedAt,isSynced);
+int get hashCode => Object.hash(runtimeType,id,memberId,date,checkInTime,checkOutTime,createdAt);
 
 @override
 String toString() {
-  return 'Attendance(id: $id, memberId: $memberId, memberName: $memberName, date: $date, checkInTime: $checkInTime, createdAt: $createdAt, updatedAt: $updatedAt, lastSyncedAt: $lastSyncedAt, isSynced: $isSynced)';
+  return 'Attendance(id: $id, memberId: $memberId, date: $date, checkInTime: $checkInTime, checkOutTime: $checkOutTime, createdAt: $createdAt)';
 }
 
 
@@ -53,7 +48,7 @@ abstract mixin class $AttendanceCopyWith<$Res>  {
   factory $AttendanceCopyWith(Attendance value, $Res Function(Attendance) _then) = _$AttendanceCopyWithImpl;
 @useResult
 $Res call({
- String id, String memberId, String memberName, String date,@TimestampConverter() DateTime checkInTime,@TimestampConverter() DateTime createdAt,@TimestampConverter() DateTime updatedAt,@NullableTimestampConverter() DateTime? lastSyncedAt, bool isSynced
+ String id, String memberId,@TimestampConverter() DateTime date,@TimestampConverter() DateTime checkInTime,@NullableTimestampConverter() DateTime? checkOutTime,@TimestampConverter() DateTime createdAt
 });
 
 
@@ -70,18 +65,15 @@ class _$AttendanceCopyWithImpl<$Res>
 
 /// Create a copy of Attendance
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? memberId = null,Object? memberName = null,Object? date = null,Object? checkInTime = null,Object? createdAt = null,Object? updatedAt = null,Object? lastSyncedAt = freezed,Object? isSynced = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? memberId = null,Object? date = null,Object? checkInTime = null,Object? checkOutTime = freezed,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,memberId: null == memberId ? _self.memberId : memberId // ignore: cast_nullable_to_non_nullable
-as String,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as String,checkInTime: null == checkInTime ? _self.checkInTime : checkInTime // ignore: cast_nullable_to_non_nullable
-as DateTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,lastSyncedAt: freezed == lastSyncedAt ? _self.lastSyncedAt : lastSyncedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,isSynced: null == isSynced ? _self.isSynced : isSynced // ignore: cast_nullable_to_non_nullable
-as bool,
+as DateTime,checkInTime: null == checkInTime ? _self.checkInTime : checkInTime // ignore: cast_nullable_to_non_nullable
+as DateTime,checkOutTime: freezed == checkOutTime ? _self.checkOutTime : checkOutTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
@@ -166,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String memberId,  String memberName,  String date, @TimestampConverter()  DateTime checkInTime, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt, @NullableTimestampConverter()  DateTime? lastSyncedAt,  bool isSynced)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String memberId, @TimestampConverter()  DateTime date, @TimestampConverter()  DateTime checkInTime, @NullableTimestampConverter()  DateTime? checkOutTime, @TimestampConverter()  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Attendance() when $default != null:
-return $default(_that.id,_that.memberId,_that.memberName,_that.date,_that.checkInTime,_that.createdAt,_that.updatedAt,_that.lastSyncedAt,_that.isSynced);case _:
+return $default(_that.id,_that.memberId,_that.date,_that.checkInTime,_that.checkOutTime,_that.createdAt);case _:
   return orElse();
 
 }
@@ -187,10 +179,10 @@ return $default(_that.id,_that.memberId,_that.memberName,_that.date,_that.checkI
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String memberId,  String memberName,  String date, @TimestampConverter()  DateTime checkInTime, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt, @NullableTimestampConverter()  DateTime? lastSyncedAt,  bool isSynced)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String memberId, @TimestampConverter()  DateTime date, @TimestampConverter()  DateTime checkInTime, @NullableTimestampConverter()  DateTime? checkOutTime, @TimestampConverter()  DateTime createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _Attendance():
-return $default(_that.id,_that.memberId,_that.memberName,_that.date,_that.checkInTime,_that.createdAt,_that.updatedAt,_that.lastSyncedAt,_that.isSynced);case _:
+return $default(_that.id,_that.memberId,_that.date,_that.checkInTime,_that.checkOutTime,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +199,10 @@ return $default(_that.id,_that.memberId,_that.memberName,_that.date,_that.checkI
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String memberId,  String memberName,  String date, @TimestampConverter()  DateTime checkInTime, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt, @NullableTimestampConverter()  DateTime? lastSyncedAt,  bool isSynced)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String memberId, @TimestampConverter()  DateTime date, @TimestampConverter()  DateTime checkInTime, @NullableTimestampConverter()  DateTime? checkOutTime, @TimestampConverter()  DateTime createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Attendance() when $default != null:
-return $default(_that.id,_that.memberId,_that.memberName,_that.date,_that.checkInTime,_that.createdAt,_that.updatedAt,_that.lastSyncedAt,_that.isSynced);case _:
+return $default(_that.id,_that.memberId,_that.date,_that.checkInTime,_that.checkOutTime,_that.createdAt);case _:
   return null;
 
 }
@@ -219,26 +211,18 @@ return $default(_that.id,_that.memberId,_that.memberName,_that.date,_that.checkI
 }
 
 /// @nodoc
+@JsonSerializable()
 
-@JsonSerializable(explicitToJson: true)
-class _Attendance extends Attendance {
-  const _Attendance({required this.id, required this.memberId, required this.memberName, required this.date, @TimestampConverter() required this.checkInTime, @TimestampConverter() required this.createdAt, @TimestampConverter() required this.updatedAt, @NullableTimestampConverter() this.lastSyncedAt, this.isSynced = false}): super._();
+class _Attendance implements Attendance {
+  const _Attendance({required this.id, required this.memberId, @TimestampConverter() required this.date, @TimestampConverter() required this.checkInTime, @NullableTimestampConverter() this.checkOutTime, @TimestampConverter() required this.createdAt});
   factory _Attendance.fromJson(Map<String, dynamic> json) => _$AttendanceFromJson(json);
 
-/// Firestore document id: `memberId_yyyymmdd`.
 @override final  String id;
-/// Member reference.
 @override final  String memberId;
-/// Denormalized member name for quick reporting.
-@override final  String memberName;
-/// Logical attendance date (local YYYY-MM-DD).
-@override final  String date;
-/// Exact check-in timestamp.
+@override@TimestampConverter() final  DateTime date;
 @override@TimestampConverter() final  DateTime checkInTime;
+@override@NullableTimestampConverter() final  DateTime? checkOutTime;
 @override@TimestampConverter() final  DateTime createdAt;
-@override@TimestampConverter() final  DateTime updatedAt;
-@override@NullableTimestampConverter() final  DateTime? lastSyncedAt;
-@override@JsonKey() final  bool isSynced;
 
 /// Create a copy of Attendance
 /// with the given fields replaced by the non-null parameter values.
@@ -253,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Attendance&&(identical(other.id, id) || other.id == id)&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.date, date) || other.date == date)&&(identical(other.checkInTime, checkInTime) || other.checkInTime == checkInTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Attendance&&(identical(other.id, id) || other.id == id)&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.date, date) || other.date == date)&&(identical(other.checkInTime, checkInTime) || other.checkInTime == checkInTime)&&(identical(other.checkOutTime, checkOutTime) || other.checkOutTime == checkOutTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,memberId,memberName,date,checkInTime,createdAt,updatedAt,lastSyncedAt,isSynced);
+int get hashCode => Object.hash(runtimeType,id,memberId,date,checkInTime,checkOutTime,createdAt);
 
 @override
 String toString() {
-  return 'Attendance(id: $id, memberId: $memberId, memberName: $memberName, date: $date, checkInTime: $checkInTime, createdAt: $createdAt, updatedAt: $updatedAt, lastSyncedAt: $lastSyncedAt, isSynced: $isSynced)';
+  return 'Attendance(id: $id, memberId: $memberId, date: $date, checkInTime: $checkInTime, checkOutTime: $checkOutTime, createdAt: $createdAt)';
 }
 
 
@@ -273,7 +257,7 @@ abstract mixin class _$AttendanceCopyWith<$Res> implements $AttendanceCopyWith<$
   factory _$AttendanceCopyWith(_Attendance value, $Res Function(_Attendance) _then) = __$AttendanceCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String memberId, String memberName, String date,@TimestampConverter() DateTime checkInTime,@TimestampConverter() DateTime createdAt,@TimestampConverter() DateTime updatedAt,@NullableTimestampConverter() DateTime? lastSyncedAt, bool isSynced
+ String id, String memberId,@TimestampConverter() DateTime date,@TimestampConverter() DateTime checkInTime,@NullableTimestampConverter() DateTime? checkOutTime,@TimestampConverter() DateTime createdAt
 });
 
 
@@ -290,18 +274,15 @@ class __$AttendanceCopyWithImpl<$Res>
 
 /// Create a copy of Attendance
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? memberId = null,Object? memberName = null,Object? date = null,Object? checkInTime = null,Object? createdAt = null,Object? updatedAt = null,Object? lastSyncedAt = freezed,Object? isSynced = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? memberId = null,Object? date = null,Object? checkInTime = null,Object? checkOutTime = freezed,Object? createdAt = null,}) {
   return _then(_Attendance(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,memberId: null == memberId ? _self.memberId : memberId // ignore: cast_nullable_to_non_nullable
-as String,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as String,checkInTime: null == checkInTime ? _self.checkInTime : checkInTime // ignore: cast_nullable_to_non_nullable
-as DateTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,lastSyncedAt: freezed == lastSyncedAt ? _self.lastSyncedAt : lastSyncedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,isSynced: null == isSynced ? _self.isSynced : isSynced // ignore: cast_nullable_to_non_nullable
-as bool,
+as DateTime,checkInTime: null == checkInTime ? _self.checkInTime : checkInTime // ignore: cast_nullable_to_non_nullable
+as DateTime,checkOutTime: freezed == checkOutTime ? _self.checkOutTime : checkOutTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

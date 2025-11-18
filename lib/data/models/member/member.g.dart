@@ -49,7 +49,7 @@ Map<String, dynamic> _$MemberToJson(_Member instance) => <String, dynamic>{
   'expiryDate': const TimestampConverter().toJson(instance.expiryDate),
   'attendanceCount': instance.attendanceCount,
   'photoBase64': instance.photoBase64,
-  'notes': instance.notes.map((e) => e.toJson()).toList(),
+  'notes': instance.notes,
   'createdAt': const TimestampConverter().toJson(instance.createdAt),
   'updatedAt': const TimestampConverter().toJson(instance.updatedAt),
   'lastSyncedAt': const NullableTimestampConverter().toJson(
