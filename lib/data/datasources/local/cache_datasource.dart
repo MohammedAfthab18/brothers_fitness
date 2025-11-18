@@ -97,6 +97,30 @@ class CacheDatasource {
     await _cacheService.remove(_docKey(collection, id));
   }
 
+  Future<T?> loadModelByKey<T>(String cacheKey) async {
+    final adapter = _adapterFor<T>();
+    final cached = await _cacheService.load(cacheKey);
+    if (cached == null) {
+      return null;
+    }
+    return adapter.fromJson(cached);
+  }
+
+  Future<void> saveModelByKey<T>(
+    String cacheKey,
+    T model, {
+    Duration? ttl,
+  }) async {
+    final adapter = _adapterFor<T>();
+    await _cacheService.save(
+      cacheKey,
+      adapter.toJson(model),
+      ttl: ttl ?? defaultTtl,
+    );
+  }
+
+  Future<void> removeByKey(String cacheKey) => _cacheService.remove(cacheKey);
+
   Future<List<T>> fetchList<T>({
     required String cacheKey,
     required Future<List<T>> Function() remoteCall,
