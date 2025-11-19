@@ -26,18 +26,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   @override
-  void initState() {
-    super.initState();
-    ref.listen(authStateProvider, (previous, next) {
-      next.whenData((user) {
-        if (user != null && mounted) {
-          context.go(RouteConstants.dashboard);
-        }
-      });
-    });
-  }
-
-  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -53,6 +41,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         .login(_emailController.text.trim(), _passwordController.text.trim());
 
     final state = ref.read(authControllerProvider);
+
     if (state.hasError && mounted) {
       final message = state.error?.toString() ?? 'Failed to sign in';
       ScaffoldMessenger.of(context).showSnackBar(
@@ -65,6 +54,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(authStateProvider, (previous, next) {
+      next.whenData((user) {
+        if (user != null && mounted) {
+          context.go(RouteConstants.dashboard);
+        }
+      });
+    });
+
     final authStatus = ref.watch(authControllerProvider);
     final isLoading = authStatus.isLoading;
 
@@ -153,7 +150,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
             ),
           ),
-          // Right side - Image panel
+
           const LoginImagePanel(),
         ],
       ),
