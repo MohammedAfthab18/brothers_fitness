@@ -12,10 +12,9 @@ class AttendanceRemoteDataSource {
   static const _collectionPath = 'attendance';
 
   Future<void> markCheckIn(Attendance attendance) {
-    final data = Map<String, dynamic>.from(attendance.toJson())..remove('id');
     return _firestoreService.setDocument(
       path: '$_collectionPath/${attendance.id}',
-      data: data,
+      data: attendance.toFirestore(),
     );
   }
 
