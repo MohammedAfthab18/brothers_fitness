@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+
+import '../../../../core/constants/route_constants.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
@@ -20,13 +23,13 @@ class QuickActionsRow extends StatelessWidget {
           const SizedBox(height: AppDimensions.spacing4),
           Row(
             children: [
-              _ActionButton(
-                icon: LucideIcons.plus,
-                label: 'Add Member',
-                onTap: () {
-                  // TODO: Navigate to add member
-                },
-              ),
+               _ActionButton(
+                 icon: LucideIcons.plus,
+                 label: 'Add Member',
+                 onTap: () {
+                   context.push(RouteConstants.memberCreate);
+                 },
+               ),
               const SizedBox(width: AppDimensions.spacing4),
               _ActionButton(
                 icon: LucideIcons.creditCard,

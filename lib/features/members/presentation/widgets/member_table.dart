@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/constants/route_constants.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
@@ -125,12 +128,15 @@ class MemberTable extends StatelessWidget {
           ),
           // Table rows
           ..._sampleMembers.map(
-            (member) => MemberTableRow(
-              member: member,
-              onTap: () {
-                // TODO: Navigate to member details
-              },
-            ),
+             (member) => Builder(
+               builder: (context) => MemberTableRow(
+                 member: member,
+                 onTap: () {
+                   final id = member['id'] as String;
+                   context.push(RouteConstants.memberDetailPath(id));
+                 },
+               ),
+             ),
           ),
         ],
       ),

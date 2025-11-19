@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+
+import '../../../../core/constants/route_constants.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
@@ -31,12 +34,12 @@ class _AddEditMemberPageState extends ConsumerState<AddEditMemberPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SidebarLayout(
-        currentRoute: '/members',
+        currentRoute: RouteConstants.members,
         onRouteChanged: (route) {
-          // TODO: Navigate
+          context.go(route);
         },
         onLogout: () {
-          // TODO: Handle logout
+          context.go(RouteConstants.login);
         },
         child: SingleChildScrollView(
           child: Padding(
@@ -49,7 +52,7 @@ class _AddEditMemberPageState extends ConsumerState<AddEditMemberPage> {
                   // Back button
                   TextButton.icon(
                     onPressed: () {
-                      // TODO: Navigate back
+                      context.pop();
                     },
                     icon: Icon(
                       LucideIcons.chevronLeft,
@@ -225,6 +228,7 @@ class _AddEditMemberPageState extends ConsumerState<AddEditMemberPage> {
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
                                     // TODO: Save member
+                                    context.pop();
                                   }
                                 },
                                 isFullWidth: true,
@@ -234,7 +238,7 @@ class _AddEditMemberPageState extends ConsumerState<AddEditMemberPage> {
                             SecondaryButton(
                               label: 'Cancel',
                               onPressed: () {
-                                // TODO: Navigate back
+                                context.pop();
                               },
                             ),
                           ],

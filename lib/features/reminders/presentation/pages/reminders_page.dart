@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/constants/route_constants.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
@@ -20,12 +22,12 @@ class RemindersPage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SidebarLayout(
-        currentRoute: '/reminders',
+        currentRoute: RouteConstants.reminders,
         onRouteChanged: (route) {
-          // TODO: Navigate
+          context.go(route);
         },
         onLogout: () {
-          // TODO: Handle logout
+          context.go(RouteConstants.login);
         },
         child: SingleChildScrollView(
           child: Padding(
