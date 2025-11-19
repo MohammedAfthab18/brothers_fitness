@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
+import '../../../core/constants/route_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../core/theme/app_text_styles.dart';
@@ -62,38 +63,50 @@ class SidebarLayout extends StatelessWidget {
                       _NavItem(
                         icon: LucideIcons.home,
                         label: 'Dashboard',
-                        isActive: currentRoute == '/dashboard',
-                        onTap: () => onRouteChanged?.call('/dashboard'),
+                        isActive: currentRoute == RouteConstants.dashboard,
+                        onTap: () => onRouteChanged?.call(
+                          RouteConstants.dashboard,
+                        ),
                       ),
                       _NavItem(
                         icon: LucideIcons.users,
                         label: 'Members',
-                        isActive: currentRoute == '/members',
-                        onTap: () => onRouteChanged?.call('/members'),
+                        isActive: currentRoute == RouteConstants.members,
+                        onTap: () => onRouteChanged?.call(
+                          RouteConstants.members,
+                        ),
                       ),
                       _NavItem(
                         icon: LucideIcons.bell,
                         label: 'Expiry Reminders',
-                        isActive: currentRoute == '/reminders',
-                        onTap: () => onRouteChanged?.call('/reminders'),
+                        isActive: currentRoute == RouteConstants.reminders,
+                        onTap: () => onRouteChanged?.call(
+                          RouteConstants.reminders,
+                        ),
                       ),
                       _NavItem(
                         icon: LucideIcons.creditCard,
                         label: 'Plans & Pricing',
-                        isActive: currentRoute == '/plans',
-                        onTap: () => onRouteChanged?.call('/plans'),
+                        isActive: currentRoute == RouteConstants.plans,
+                        onTap: () => onRouteChanged?.call(
+                          RouteConstants.plans,
+                        ),
                       ),
                       _NavItem(
                         icon: LucideIcons.barChart3,
                         label: 'Analytics',
-                        isActive: currentRoute == '/analytics',
-                        onTap: () => onRouteChanged?.call('/analytics'),
+                        isActive: currentRoute == RouteConstants.analytics,
+                        onTap: () => onRouteChanged?.call(
+                          RouteConstants.analytics,
+                        ),
                       ),
                       _NavItem(
                         icon: LucideIcons.settings,
                         label: 'Settings',
-                        isActive: currentRoute == '/settings',
-                        onTap: () => onRouteChanged?.call('/settings'),
+                        isActive: currentRoute == RouteConstants.settings,
+                        onTap: () => onRouteChanged?.call(
+                          RouteConstants.settings,
+                        ),
                       ),
                     ],
                   ),

@@ -21,16 +21,17 @@ class QuickActionsRow extends StatelessWidget {
         children: [
           Text('Quick Actions', style: AppTextStyles.titleMedium()),
           const SizedBox(height: AppDimensions.spacing4),
-          Row(
+          Wrap(
+            spacing: AppDimensions.spacing4,
+            runSpacing: AppDimensions.spacing3,
             children: [
-               _ActionButton(
-                 icon: LucideIcons.plus,
-                 label: 'Add Member',
-                 onTap: () {
-                   context.push(RouteConstants.memberCreate);
-                 },
-               ),
-              const SizedBox(width: AppDimensions.spacing4),
+              _ActionButton(
+                icon: LucideIcons.plus,
+                label: 'Add Member',
+                onTap: () {
+                  context.push(RouteConstants.memberCreate);
+                },
+              ),
               _ActionButton(
                 icon: LucideIcons.creditCard,
                 label: 'Add Plan',
@@ -38,7 +39,6 @@ class QuickActionsRow extends StatelessWidget {
                   // TODO: Navigate to add plan
                 },
               ),
-              const SizedBox(width: AppDimensions.spacing4),
               _ActionButton(
                 icon: LucideIcons.send,
                 label: 'Broadcast Message',

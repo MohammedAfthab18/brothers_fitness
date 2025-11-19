@@ -8,6 +8,8 @@ import '../../../../core/theme/app_dimensions.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/widgets/buttons/primary_button.dart';
 import '../../../../shared/widgets/inputs/custom_text_field.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/auth_state_provider.dart';
 import '../widgets/login_image_panel.dart';
 
 /// Notion-style login page matching React design.
@@ -22,7 +24,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listen(authStateProvider, (previous, next) {
+      next.whenData((user) {
+        if (user != null && mounted) {
+          context.go(RouteConstants.dashboard);
+        }
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -33,25 +46,29 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
+    FocusScope.of(context).unfocus();
 
-    setState(() => _isLoading = true);
+    await ref
+        .read(authControllerProvider.notifier)
+        .login(_emailController.text.trim(), _passwordController.text.trim());
 
-    // TODO: Implement login logic with auth repository
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (mounted) {
-      setState(() => _isLoading = false);
-      // Navigate to dashboard
-      if (context.mounted) {
-        context.go(RouteConstants.dashboard);
-      }
+    final state = ref.read(authControllerProvider);
+    if (state.hasError && mounted) {
+      final message = state.error?.toString() ?? 'Failed to sign in';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } else if (mounted) {
+      context.go(RouteConstants.dashboard);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authStatus = ref.watch(authControllerProvider);
+    final isLoading = authStatus.isLoading;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
       body: Row(
         children: [
           // Left side - Login form
@@ -112,9 +129,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           const SizedBox(height: AppDimensions.spacing6),
                           PrimaryButton(
                             label: 'Continue',
-                            onPressed: _handleLogin,
+                            onPressed: isLoading ? null : _handleLogin,
                             isFullWidth: true,
-                            isLoading: _isLoading,
+                            isLoading: isLoading,
                           ),
                           const SizedBox(height: AppDimensions.spacing4),
                           Center(

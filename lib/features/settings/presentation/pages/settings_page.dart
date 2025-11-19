@@ -4,10 +4,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/route_constants.dart';
 
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/router/route_guards.dart';
 import '../../../../core/theme/app_dimensions.dart';
 import '../../../../shared/widgets/layouts/page_header.dart';
 import '../../../../shared/widgets/layouts/sidebar_layout.dart';
+import '../../../auth/providers/auth_provider.dart';
 import '../widgets/admin_profile_section.dart';
 import '../widgets/cache_info_section.dart';
 import '../widgets/theme_section.dart';
@@ -19,45 +20,51 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SidebarLayout(
-        currentRoute: RouteConstants.settings,
-        onRouteChanged: (route) {
-          context.go(route);
-        },
-        onLogout: () {
-          context.go(RouteConstants.login);
-        },
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(AppDimensions.spacing8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const PageHeader(
-                  title: 'Settings',
-                  subtitle: 'Manage your app preferences',
+    return AuthGuard(
+      builder: (context, ref) {
+        return Scaffold(
+          body: SidebarLayout(
+            currentRoute: RouteConstants.settings,
+            onRouteChanged: (route) {
+              context.go(route);
+            },
+            onLogout: () async {
+              await ref.read(authControllerProvider.notifier).logout();
+              if (context.mounted) {
+                context.go(RouteConstants.login);
+              }
+            },
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(AppDimensions.spacing8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const PageHeader(
+                      title: 'Settings',
+                      subtitle: 'Manage your app preferences',
+                    ),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 800),
+                      child: const Column(
+                        children: [
+                          AdminProfileSection(),
+                          SizedBox(height: AppDimensions.spacing6),
+                          ThemeSection(),
+                          SizedBox(height: AppDimensions.spacing6),
+                          WhatsAppConfigSection(),
+                          SizedBox(height: AppDimensions.spacing6),
+                          CacheInfoSection(),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 800),
-                  child: Column(
-                    children: [
-                      const AdminProfileSection(),
-                      const SizedBox(height: AppDimensions.spacing6),
-                      const ThemeSection(),
-                      const SizedBox(height: AppDimensions.spacing6),
-                      const WhatsAppConfigSection(),
-                      const SizedBox(height: AppDimensions.spacing6),
-                      const CacheInfoSection(),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

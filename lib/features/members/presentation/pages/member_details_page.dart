@@ -5,12 +5,14 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/constants/route_constants.dart';
 
+import '../../../../core/router/route_guards.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/widgets/cards/base_card.dart';
 import '../../../../shared/widgets/indicators/status_badge.dart';
 import '../../../../shared/widgets/layouts/sidebar_layout.dart';
+import '../../../auth/providers/auth_provider.dart';
 import '../widgets/ai_renewal_widget.dart';
 import '../widgets/attendance_timeline.dart';
 import '../widgets/member_profile_card.dart';
@@ -41,128 +43,128 @@ class MemberDetailsPage extends ConsumerWidget {
       'totalPaid': 4800.0,
     };
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SidebarLayout(
-        currentRoute: RouteConstants.members,
-        onRouteChanged: (route) {
-          context.go(route);
-        },
-        onLogout: () {
-          context.go(RouteConstants.login);
-        },
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(AppDimensions.spacing8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Back button
-                TextButton.icon(
-                  onPressed: () {
-                    context.pop();
-                  },
-                  icon: Icon(
-                    LucideIcons.chevronLeft,
-                    size: AppDimensions.iconMedium,
-                  ),
-                  label: Text(
-                    'Back to Members',
-                    style: AppTextStyles.withWeight(
-                      AppTextStyles.bodySmall(),
-                      FontWeight.w500,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: AppDimensions.spacing6),
-                // Profile card
-                MemberProfileCard(member: member),
-                const SizedBox(height: AppDimensions.spacing6),
-                // Main content grid
-                Row(
+    return AuthGuard(
+      builder: (context, ref) {
+        return Scaffold(
+          body: SidebarLayout(
+            currentRoute: RouteConstants.members,
+            onRouteChanged: (route) {
+              context.go(route);
+            },
+            onLogout: () async {
+              await ref.read(authControllerProvider.notifier).logout();
+              if (context.mounted) {
+                context.go(RouteConstants.login);
+              }
+            },
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(AppDimensions.spacing8),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Left column (2/3)
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        children: [
-                          // Membership details
-                          BaseCard(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Membership Details',
-                                  style: AppTextStyles.titleMedium(),
-                                ),
-                                const SizedBox(height: AppDimensions.spacing4),
-                                GridView.count(
-                                  crossAxisCount: 2,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  mainAxisSpacing: AppDimensions.spacing4,
-                                  crossAxisSpacing: AppDimensions.spacing4,
-                                  childAspectRatio: 3,
+                    TextButton.icon(
+                      onPressed: () {
+                        context.pop();
+                      },
+                      icon: Icon(
+                        LucideIcons.chevronLeft,
+                        size: AppDimensions.iconMedium,
+                      ),
+                      label: Text(
+                        'Back to Members',
+                        style: AppTextStyles.withWeight(
+                          AppTextStyles.bodySmall(),
+                          FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.spacing6),
+                    MemberProfileCard(member: member),
+                    const SizedBox(height: AppDimensions.spacing6),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            children: [
+                              BaseCard(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _DetailItem(
-                                      label: 'Current Plan',
-                                      value: member['plan'] as String,
+                                    Text(
+                                      'Membership Details',
+                                      style: AppTextStyles.titleMedium(),
                                     ),
-                                    _DetailItem(
-                                      label: 'Monthly Fee',
-                                      value: '\$${member['monthlyFee']}',
+                                    const SizedBox(
+                                      height: AppDimensions.spacing4,
                                     ),
-                                    _DetailItem(
-                                      label: 'Start Date',
-                                      value: member['startDate'] as String,
-                                    ),
-                                    _DetailItem(
-                                      label: 'End Date',
-                                      value: member['endDate'] as String,
-                                    ),
-                                    _DetailItem(
-                                      label: 'Days Remaining',
-                                      value: '${member['daysRemaining']} days',
-                                    ),
-                                    _DetailItem(
-                                      label: 'Total Paid',
-                                      value: '\$${member['totalPaid']}',
+                                    GridView.count(
+                                      crossAxisCount: 2,
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      mainAxisSpacing: AppDimensions.spacing4,
+                                      crossAxisSpacing: AppDimensions.spacing4,
+                                      childAspectRatio: 3,
+                                      children: [
+                                        _DetailItem(
+                                          label: 'Current Plan',
+                                          value: member['plan'] as String,
+                                        ),
+                                        _DetailItem(
+                                          label: 'Monthly Fee',
+                                          value: '\$${member['monthlyFee']}',
+                                        ),
+                                        _DetailItem(
+                                          label: 'Start Date',
+                                          value: member['startDate'] as String,
+                                        ),
+                                        _DetailItem(
+                                          label: 'End Date',
+                                          value: member['endDate'] as String,
+                                        ),
+                                        _DetailItem(
+                                          label: 'Days Remaining',
+                                          value:
+                                              '${member['daysRemaining']} days',
+                                        ),
+                                        _DetailItem(
+                                          label: 'Total Paid',
+                                          value: '\$${member['totalPaid']}',
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(height: AppDimensions.spacing6),
+                              const AttendanceTimeline(),
+                              const SizedBox(height: AppDimensions.spacing6),
+                              const PaymentsHistoryWidget(),
+                            ],
                           ),
-                          const SizedBox(height: AppDimensions.spacing6),
-                          // Attendance timeline
-                          const AttendanceTimeline(),
-                          const SizedBox(height: AppDimensions.spacing6),
-                          // Payment history
-                          const PaymentsHistoryWidget(),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: AppDimensions.spacing6),
-                    // Right column (1/3)
-                    Expanded(
-                      child: Column(
-                        children: [
-                          // AI Insights
-                          const AIRenewalWidget(),
-                          const SizedBox(height: AppDimensions.spacing6),
-                          // Notes
-                          const NotesSection(),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(width: AppDimensions.spacing6),
+                        Expanded(
+                          child: Column(
+                            children: const [
+                              AIRenewalWidget(),
+                              SizedBox(height: AppDimensions.spacing6),
+                              NotesSection(),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -51,6 +51,7 @@ class StatCard extends StatelessWidget {
     return BaseCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             padding: const EdgeInsets.all(AppDimensions.spacing3),
@@ -72,7 +73,13 @@ class StatCard extends StatelessWidget {
             style: AppTextStyles.bodySmall(color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppDimensions.spacing1),
-          Text(value, style: AppTextStyles.headlineMedium()),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(value, style: AppTextStyles.headlineMedium()),
+            ),
+          ),
         ],
       ),
     );

@@ -41,6 +41,9 @@ class RouteConstants {
   static const String settingsGeneral = '/settings/general';
   static const String settingsWhatsApp = '/settings/whatsapp';
 
+  // Analytics
+  static const String analytics = '/analytics';
+
   // Reports
   static const String reports = '/reports';
   static const String reportsRevenue = '/reports/revenue';

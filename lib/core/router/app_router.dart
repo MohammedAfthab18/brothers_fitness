@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/analytics/presentation/pages/analytics_page.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../features/members/presentation/pages/add_edit_member_page.dart';
 import '../../features/members/presentation/pages/member_details_page.dart';
@@ -138,6 +139,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: RouteConstants.settings,
         name: 'settings',
         builder: (context, state) => const SettingsPage(),
+      ),
+      // Analytics
+      GoRoute(
+        path: RouteConstants.analytics,
+        name: 'analytics',
+        builder: (context, state) => const AnalyticsPage(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

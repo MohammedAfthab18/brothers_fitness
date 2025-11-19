@@ -5,11 +5,12 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/constants/route_constants.dart';
 
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/router/route_guards.dart';
 import '../../../../core/theme/app_dimensions.dart';
 import '../../../../shared/widgets/buttons/primary_button.dart';
 import '../../../../shared/widgets/layouts/page_header.dart';
 import '../../../../shared/widgets/layouts/sidebar_layout.dart';
+import '../../../auth/providers/auth_provider.dart';
 import '../widgets/payment_card.dart';
 import '../widgets/revenue_summary.dart';
 
@@ -37,50 +38,54 @@ class PaymentsListPage extends ConsumerWidget {
       },
     ];
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SidebarLayout(
-        currentRoute: RouteConstants.payments,
-        onRouteChanged: (route) {
-          context.go(route);
-        },
-        onLogout: () {
-          context.go(RouteConstants.login);
-        },
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(AppDimensions.spacing8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PageHeader(
-                  title: 'Payments',
-                  subtitle: 'View and manage all payments',
-                  action: PrimaryButton(
-                    label: 'Add Payment',
-                    icon: Icon(LucideIcons.plus, size: 20),
-                    onPressed: () {
-                      // TODO: Navigate to add payment
-                    },
-                  ),
-                ),
-                // Revenue summary
-                const RevenueSummary(),
-                const SizedBox(height: AppDimensions.spacing8),
-                // Payments list
-                ...payments.map(
-                  (payment) => Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: AppDimensions.spacing4,
+    return AuthGuard(
+      builder: (context, ref) {
+        return Scaffold(
+          body: SidebarLayout(
+            currentRoute: RouteConstants.payments,
+            onRouteChanged: (route) {
+              context.go(route);
+            },
+            onLogout: () async {
+              await ref.read(authControllerProvider.notifier).logout();
+              if (context.mounted) {
+                context.go(RouteConstants.login);
+              }
+            },
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(AppDimensions.spacing8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PageHeader(
+                      title: 'Payments',
+                      subtitle: 'View and manage all payments',
+                      action: PrimaryButton(
+                        label: 'Add Payment',
+                        icon: Icon(LucideIcons.plus, size: 20),
+                        onPressed: () {
+                          // TODO: Navigate to add payment
+                        },
+                      ),
                     ),
-                    child: PaymentCard(payment: payment),
-                  ),
+                    const RevenueSummary(),
+                    const SizedBox(height: AppDimensions.spacing8),
+                    ...payments.map(
+                      (payment) => Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: AppDimensions.spacing4,
+                        ),
+                        child: PaymentCard(payment: payment),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
