@@ -12,15 +12,24 @@ class AuthRepository {
   final FirestoreService _firestoreService;
 
   Future<AppUser?> login(String email, String password) async {
-    final credential = await _authService.signInWithEmailPassword(
-      email: email,
-      password: password,
-    );
-    final firebaseUser = credential.user ?? _authService.currentUser;
-    if (firebaseUser == null) {
-      return null;
+    try {
+      // First, authenticate with Firebase Auth
+      final credential = await _authService.signInWithEmailPassword(
+        email: email,
+        password: password,
+      );
+      
+      final firebaseUser = credential.user ?? _authService.currentUser;
+      if (firebaseUser == null) {
+        throw Exception('Authentication failed - no user returned');
+      }
+
+      // Then sync with Firestore
+      return await _syncWithFirestore(firebaseUser);
+    } catch (e) {
+      // Re-throw with more context
+      throw Exception('Login failed: ${e.toString()}');
     }
-    return _syncWithFirestore(firebaseUser);
   }
 
   Future<void> logout() => _authService.signOut();
@@ -30,7 +39,13 @@ class AuthRepository {
       if (firebaseUser == null) {
         return null;
       }
-      return _syncWithFirestore(firebaseUser);
+      try {
+        return await _syncWithFirestore(firebaseUser);
+      } catch (e) {
+        // Log error but don't break the stream
+        print('Error syncing user: $e');
+        return _buildUser(firebaseUser);
+      }
     });
   }
 
@@ -39,7 +54,12 @@ class AuthRepository {
     if (firebaseUser == null) {
       return null;
     }
-    return _syncWithFirestore(firebaseUser);
+    try {
+      return await _syncWithFirestore(firebaseUser);
+    } catch (e) {
+      print('Error getting current user: $e');
+      return _buildUser(firebaseUser);
+    }
   }
 
   Future<void> refreshToken() async {
@@ -47,24 +67,43 @@ class AuthRepository {
   }
 
   Future<AppUser> _syncWithFirestore(User firebaseUser) async {
-    final existing = await _fetchUser(firebaseUser.uid);
-    if (existing != null) {
-      return existing;
+    try {
+      // Try to fetch existing user
+      final existing = await _fetchUser(firebaseUser.uid);
+      if (existing != null) {
+        return existing;
+      }
+    } catch (e) {
+      print('Error fetching user from Firestore: $e');
     }
-    final user = _buildUser(firebaseUser);
-    await _firestoreService.setDocument(
-      path: 'users/${firebaseUser.uid}',
-      data: user.toFirestore(),
-      merge: true,
-    );
-    return user;
+
+    // If user doesn't exist or fetch failed, create/update user document
+    try {
+      final user = _buildUser(firebaseUser);
+      await _firestoreService.setDocument(
+        path: 'users/${firebaseUser.uid}',
+        data: user.toFirestore(),
+        merge: true,
+      );
+      return user;
+    } catch (e) {
+      print('Error creating user in Firestore: $e');
+      // Return user even if Firestore write fails (offline mode)
+      return _buildUser(firebaseUser);
+    }
   }
 
-  Future<AppUser?> _fetchUser(String uid) {
-    return _firestoreService.getDocument<AppUser>(
-      path: 'users/$uid',
-      fromJson: (json) => AppUser.fromJson(json),
-    );
+  Future<AppUser?> _fetchUser(String uid) async {
+    try {
+      return await _firestoreService.getDocument<AppUser>(
+        path: 'users/$uid',
+        fromJson: (json) => AppUser.fromJson(json),
+        forceRefresh: false, // Use cache first
+      );
+    } catch (e) {
+      print('Fetch user error: $e');
+      return null;
+    }
   }
 
   AppUser _buildUser(User firebaseUser) {
