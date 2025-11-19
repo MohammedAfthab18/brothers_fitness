@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Inter/Sans-serif typography system.
 class AppTextStyles {
   AppTextStyles._();
 
