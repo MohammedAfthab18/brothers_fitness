@@ -4,14 +4,23 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../data/models/member/member.dart';
 import '../../../../shared/widgets/cards/base_card.dart';
 import '../../../../shared/widgets/indicators/status_badge.dart';
+import '../../utils/member_status_utils.dart';
 
 /// Member profile card matching React design.
 class MemberProfileCard extends StatelessWidget {
-  const MemberProfileCard({super.key, required this.member});
+  const MemberProfileCard({
+    super.key,
+    required this.member,
+    this.onEdit,
+    this.onDelete,
+  });
 
-  final Map<String, dynamic> member;
+  final Member member;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +37,16 @@ class MemberProfileCard extends StatelessWidget {
                 height: 96,
                 decoration: BoxDecoration(
                   color: AppColors.grey100,
-                  borderRadius: BorderRadius.circular(
-                    AppDimensions.radiusLarge,
-                  ),
+                  borderRadius:
+                      BorderRadius.circular(AppDimensions.radiusLarge),
                 ),
                 child: Center(
                   child: Text(
-                    member['photo'] as String? ?? '👤',
-                    style: const TextStyle(fontSize: 48),
+                    _initials(member.fullName),
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
@@ -45,7 +56,7 @@ class MemberProfileCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    member['name'] as String,
+                    member.fullName,
                     style: AppTextStyles.headlineLarge(),
                   ),
                   const SizedBox(height: AppDimensions.spacing2),
@@ -58,20 +69,20 @@ class MemberProfileCard extends StatelessWidget {
                       ),
                       const SizedBox(width: AppDimensions.spacing1 + 2),
                       Text(
-                        member['phone'] as String,
+                        member.phone,
                         style: AppTextStyles.bodySmall(
                           color: AppColors.textSecondary,
                         ),
                       ),
                       const SizedBox(width: AppDimensions.spacing4),
                       Icon(
-                        LucideIcons.mail,
+                        LucideIcons.messageCircle,
                         size: 16,
                         color: AppColors.textSecondary,
                       ),
                       const SizedBox(width: AppDimensions.spacing1 + 2),
                       Text(
-                        member['email'] as String? ?? '',
+                        member.whatsappNumber,
                         style: AppTextStyles.bodySmall(
                           color: AppColors.textSecondary,
                         ),
@@ -79,7 +90,9 @@ class MemberProfileCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: AppDimensions.spacing3),
-                  StatusBadge(status: member['status'] as MemberStatus),
+                  StatusBadge(
+                    status: memberStatusFromString(member.status),
+                  ),
                 ],
               ),
             ],
@@ -93,9 +106,8 @@ class MemberProfileCard extends StatelessWidget {
                   size: AppDimensions.iconMedium,
                   color: AppColors.textSecondary,
                 ),
-                onPressed: () {
-                  // TODO: Navigate to edit
-                },
+                onPressed: onEdit,
+                tooltip: 'Edit',
               ),
               IconButton(
                 icon: Icon(
@@ -103,9 +115,8 @@ class MemberProfileCard extends StatelessWidget {
                   size: AppDimensions.iconMedium,
                   color: AppColors.textSecondary,
                 ),
-                onPressed: () {
-                  // TODO: Delete member
-                },
+                onPressed: onDelete,
+                tooltip: 'Delete',
               ),
             ],
           ),
@@ -113,4 +124,14 @@ class MemberProfileCard extends StatelessWidget {
       ),
     );
   }
+}
+
+String _initials(String name) {
+  final parts = name.trim().split(' ').where((p) => p.isNotEmpty).toList();
+  if (parts.isEmpty) return '👤';
+  final buffer = StringBuffer();
+  for (final part in parts.take(2)) {
+    buffer.write(part[0].toUpperCase());
+  }
+  return buffer.toString();
 }

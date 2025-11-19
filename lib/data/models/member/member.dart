@@ -113,3 +113,13 @@ extension MemberFirestoreX on Member {
     return json;
   }
 }
+
+extension MemberX on Member {
+  /// Estimated plan start date based on expiry and duration.
+  DateTime get planStartDate =>
+      expiryDate.subtract(Duration(days: planDurationDays));
+
+  /// Remaining days until expiry (can be negative if already expired).
+  int get daysUntilExpiry =>
+      expiryDate.difference(DateTime.now()).inDays;
+}

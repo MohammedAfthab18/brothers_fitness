@@ -32,10 +32,11 @@ class MembersRepository {
     return member;
   }
 
-  Future<List<Member>> getAllMembers() async {
+  Future<List<Member>> getAllMembers({bool forceRefresh = false}) async {
     final members = await _cache.fetchList<Member>(
       cacheKey: _membersListKey,
       remoteCall: () => _remote.getMembers(),
+      forceRefresh: forceRefresh,
     );
     await _cacheIndividuals(members);
     members.sort((a, b) => b.createdAt.compareTo(a.createdAt));
